@@ -10,7 +10,10 @@ export interface TaskStore {
   tasks: Task[];
   addTask: (task: Task) => void;
   removeTask: (id: string) => void;
-  updateTask: (id: string, task: Task) => void;
+  updateTask: (task: Task) => void;
+
+  taskToEdit: Task | null;
+  setTaskToEdit: (task: Task | null) => void;
 }
 
 const initialTasks: Task[] = [
@@ -87,11 +90,14 @@ const initialTasks: Task[] = [
 
 export const useTaskStore = create<TaskStore>((set) => ({
   tasks: initialTasks,
-  addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
+  addTask: (task) => set((state) => ({ tasks: [task, ...state.tasks] })),
   removeTask: (id) =>
     set((state) => ({ tasks: state.tasks.filter((task) => task.id !== id) })),
-  updateTask: (id, task) =>
+  updateTask: (task) =>
     set((state) => ({
-      tasks: state.tasks.map((t) => (t.id === id ? task : t)),
+      tasks: state.tasks.map((t) => (t.id === task.id ? task : t)),
     })),
+
+  taskToEdit: null,
+  setTaskToEdit: (task) => set({ taskToEdit: task }),
 }));

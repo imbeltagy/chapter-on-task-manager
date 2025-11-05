@@ -20,7 +20,7 @@ export const TaskProvider = ({
   title: string;
   description?: string;
 }) => {
-  const { removeTask } = useTaskStore();
+  const { removeTask, setTaskToEdit } = useTaskStore();
 
   const completed = useBoolean();
   const expanded = useBoolean(true);
@@ -68,7 +68,7 @@ export const TaskProvider = ({
       } else {
         if (slidePercent.value < -0.6) {
           // Edit Task
-          console.log("edit task");
+          runOnJS(setTaskToEdit)({ id, title, description });
         }
 
         // cancel

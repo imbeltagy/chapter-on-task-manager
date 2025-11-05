@@ -1,4 +1,5 @@
 import Headding from "@/components/headding";
+import TaskModal from "@/screens/task-modal";
 import Task from "@/screens/task/index";
 import { useTaskStore } from "@/store/task.store";
 import { ScrollView, View } from "react-native";
@@ -14,7 +15,7 @@ export default function Index() {
       />
 
       <ScrollView style={{ flex: 1 }}>
-        <View style={{ padding: 16 }}>
+        <View style={{ padding: 16, paddingBottom: 90 }}>
           {tasks.map((task) => (
             <Task
               key={task.id}
@@ -25,6 +26,8 @@ export default function Index() {
           ))}
         </View>
       </ScrollView>
+
+      <TaskModal />
     </>
   );
 }
