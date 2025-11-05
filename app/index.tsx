@@ -1,5 +1,5 @@
 import Headding from "@/components/headding";
-import Task from "@/screens/task";
+import Task from "@/screens/task/index";
 import { ScrollView } from "react-native";
 
 export default function Index() {
