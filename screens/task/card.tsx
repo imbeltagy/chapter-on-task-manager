@@ -16,7 +16,7 @@ export default function TaskCard() {
     completed,
     offsetX,
     setTextInitialHeight,
-    setTaskWidth,
+    setTextCollapseHeightDiff,
     textInitialHeight,
     isSliding,
     expanding,
@@ -28,22 +28,24 @@ export default function TaskCard() {
     if (textInitialHeight !== null) {
       expanded.setFalse();
       expanding.value = 0;
+      setTextCollapseHeightDiff(
+        textInitialHeight < 18 ? 0 : textInitialHeight - 28
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textInitialHeight]);
 
-  const slideStyle = useAnimatedStyle(() => ({
+  const cardStyle = useAnimatedStyle(() => ({
     transform: [
       { translateX: offsetX.value },
       { scale: withSpring(isSliding.value ? 0.95 : 1) },
     ],
   }));
 
-  const contentHeightStyle = useAnimatedStyle(() =>
+  const textStyle = useAnimatedStyle(() =>
     textInitialHeight !== null
       ? {
           height: 28 + Math.max((textInitialHeight - 28) * expanding.value, 0), // 28 => 8 padding top + 20 line height
-          opacity: 1,
         }
       : {}
   );
@@ -56,7 +58,7 @@ export default function TaskCard() {
           borderBottomWidth: 1,
           borderColor: "#eee",
         },
-        slideStyle,
+        cardStyle,
       ]}
     >
       <GestureDetector gesture={slidingGesture}>
@@ -83,7 +85,7 @@ export default function TaskCard() {
           >
             {title}
           </Text>
-          <Animated.View style={contentHeightStyle}>
+          <Animated.View style={textStyle}>
             <Text
               onLayout={(e) => {
                 setTextInitialHeight(
@@ -91,7 +93,6 @@ export default function TaskCard() {
                     ? e.nativeEvent.layout.height
                     : textInitialHeight
                 );
-                setTaskWidth(e.nativeEvent.layout.width);
               }}
               variant="bodyMedium"
               style={{

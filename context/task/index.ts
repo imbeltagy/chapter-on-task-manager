@@ -14,15 +14,16 @@ interface TaskContextType {
 
   textInitialHeight: number | null;
   setTextInitialHeight: (height: number | null) => void;
-
-  taskWidth: number;
-  setTaskWidth: (width: number) => void;
+  textCollapseHeightDiff: number | null;
+  setTextCollapseHeightDiff: (diff: number | null) => void;
 
   expanding: SharedValue<number>;
   isSliding: SharedValue<boolean>;
   offsetX: SharedValue<number>;
   slidePercent: SharedValue<number>;
   slidingGesture: PanGesture;
+
+  deleting: SharedValue<number>;
 }
 
 export const TaskContext = createContext<TaskContextType>(

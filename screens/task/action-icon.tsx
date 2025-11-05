@@ -1,5 +1,4 @@
 import { useTaskContext } from "@/context/task/index";
-import { View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -22,7 +21,7 @@ const strokeWidth = 2;
 const circumference = 2 * Math.PI * radius;
 
 export default function TaskActionIcon({ name }: Props) {
-  const { slidePercent } = useTaskContext();
+  const { slidePercent, deleting } = useTaskContext();
   const color = name === "delete" ? "rgb(255,0,0)" : "rgb(0,255,0)";
   const dir = name === "delete" ? 1 : -1;
 
@@ -62,18 +61,26 @@ export default function TaskActionIcon({ name }: Props) {
     ),
   }));
 
+  const conatainerStyle = useAnimatedProps(() => ({
+    opacity: deleting.value,
+    transform: [{ scale: deleting.value }],
+  }));
+
   return (
-    <View
-      style={{
-        position: "absolute",
-        insetBlock: 0,
-        insetInlineStart: name === "delete" ? 0 : undefined,
-        insetInlineEnd: name === "delete" ? undefined : 0,
-        width: 50,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+    <Animated.View
+      style={[
+        {
+          position: "absolute",
+          insetBlock: 0,
+          insetInlineStart: name === "delete" ? 0 : undefined,
+          insetInlineEnd: name === "delete" ? undefined : 0,
+          width: 50,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        conatainerStyle,
+      ]}
     >
       <Svg
         width={(radius + strokeWidth) * 2}
@@ -154,6 +161,6 @@ export default function TaskActionIcon({ name }: Props) {
           />
         </Svg>
       )}
-    </View>
+    </Animated.View>
   );
 }
