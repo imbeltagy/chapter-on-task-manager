@@ -49,7 +49,16 @@ export default function TaskCard() {
   );
 
   return (
-    <Animated.View style={[{ position: "relative" }, slideStyle]}>
+    <Animated.View
+      style={[
+        {
+          position: "relative",
+          borderBottomWidth: 1,
+          borderColor: "#eee",
+        },
+        slideStyle,
+      ]}
+    >
       <GestureDetector gesture={slidingGesture}>
         <Surface
           elevation={0}

@@ -1,8 +1,11 @@
 import Headding from "@/components/headding";
 import Task from "@/screens/task/index";
-import { ScrollView } from "react-native";
+import { useTaskStore } from "@/store/task.store";
+import { ScrollView, View } from "react-native";
 
 export default function Index() {
+  const { tasks } = useTaskStore();
+
   return (
     <>
       <Headding
@@ -10,12 +13,17 @@ export default function Index() {
         subtitle="Create, Edit, Order, and Delete your Tasks freely"
       />
 
-      <ScrollView style={{ flex: 1, padding: 16 }}>
-        <Task
-          id="1"
-          title="Task 1"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris posuere ligula vitae nulla cursus, a dictum tortor hendrerit."
-        />
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ padding: 16 }}>
+          {tasks.map((task) => (
+            <Task
+              key={task.id}
+              id={task.id}
+              title={task.title}
+              description={task.description}
+            />
+          ))}
+        </View>
       </ScrollView>
     </>
   );

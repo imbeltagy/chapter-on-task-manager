@@ -76,7 +76,8 @@ export const TaskProvider = ({
     })
     .onFinalize(() => {
       isSliding.value = false;
-    });
+    })
+    .activeOffsetX([-10, 10]);
 
   const toggleExpanding = () => {
     expanded.setValue((prev) => {
