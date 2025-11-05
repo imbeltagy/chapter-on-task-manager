@@ -1,7 +1,7 @@
+import { useTaskContext } from "@/context/task/index";
 import { StyleSheet, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
-import { useTaskContext } from "./context";
 
 export default function TaskExpandIcon() {
   const { textInitialHeight, expanding, toggleExpanding } = useTaskContext();

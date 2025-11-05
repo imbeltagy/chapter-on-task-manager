@@ -1,3 +1,4 @@
+import { useTaskContext } from "@/context/task/index";
 import { View } from "react-native";
 import Animated, {
   Extrapolation,
@@ -6,7 +7,6 @@ import Animated, {
   useAnimatedProps,
 } from "react-native-reanimated";
 import Svg, { Circle, G, Path } from "react-native-svg";
-import { useTaskContext } from "./context";
 
 interface Props {
   name: "edit" | "delete";

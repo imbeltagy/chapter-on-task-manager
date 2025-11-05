@@ -1,3 +1,4 @@
+import { useTaskContext } from "@/context/task/index";
 import { useEffect } from "react";
 import { GestureDetector } from "react-native-gesture-handler";
 import { Surface, Text } from "react-native-paper";
@@ -5,7 +6,6 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
-import { useTaskContext } from "./context";
 import TaskExpandIcon from "./expand-icon";
 
 export default function TaskCard() {

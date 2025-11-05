@@ -1,38 +1,8 @@
-import useBoolean, { UseBoolean } from "@/hooks/use-boolean";
-import { createContext, useContext, useState } from "react";
-import { Gesture, PanGesture } from "react-native-gesture-handler";
-import {
-  SharedValue,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-
-interface TaskContextType {
-  id: string;
-  title: string;
-  description?: string;
-
-  completed: UseBoolean;
-  expanded: UseBoolean;
-  toggleExpanding: () => void;
-
-  textInitialHeight: number | null;
-  setTextInitialHeight: (height: number | null) => void;
-
-  taskWidth: number;
-  setTaskWidth: (width: number) => void;
-
-  expanding: SharedValue<number>;
-  isSliding: SharedValue<boolean>;
-  offsetX: SharedValue<number>;
-  slidePercent: SharedValue<number>;
-  slidingGesture: PanGesture;
-}
-
-export const TaskContext = createContext<TaskContextType>(
-  {} as TaskContextType
-);
-export const useTaskContext = () => useContext<TaskContextType>(TaskContext);
+import useBoolean from "@/hooks/use-boolean";
+import { useState } from "react";
+import { Gesture } from "react-native-gesture-handler";
+import { useSharedValue, withTiming } from "react-native-reanimated";
+import { TaskContext } from ".";
 
 export const TaskProvider = ({
   children,

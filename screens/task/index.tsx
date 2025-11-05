@@ -1,7 +1,7 @@
+import { TaskProvider } from "@/context/task/provider";
 import { View } from "react-native";
 import TaskActionIcon from "./action-icon";
 import TaskCard from "./card";
-import { TaskProvider } from "./context";
 
 interface Props {
   id: string;
