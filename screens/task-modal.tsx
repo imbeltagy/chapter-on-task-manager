@@ -38,7 +38,6 @@ export default function TaskModal() {
   });
 
   const onSubmit = handleSubmit((data) => {
-    console.log("data", data);
     if (isEdit) {
       updateTask({ ...taskToEdit, ...data });
     } else {
