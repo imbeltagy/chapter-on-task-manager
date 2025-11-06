@@ -12,8 +12,11 @@ interface TaskContextType {
   expanded: UseBoolean;
   toggleExpanding: () => void;
 
-  textInitialHeight: number | null;
-  setTextInitialHeight: (height: number | null) => void;
+  titleHeight: SharedValue<number>;
+
+  textLineHeight: number;
+  textInitialHeight: number;
+  setTextInitialHeight: (height: number) => void;
   textCollapseHeightDiff: number | null;
   setTextCollapseHeightDiff: (diff: number | null) => void;
 

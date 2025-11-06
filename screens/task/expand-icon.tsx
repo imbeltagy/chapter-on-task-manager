@@ -1,19 +1,25 @@
 import { useTaskContext } from "@/context/task/index";
 import { StyleSheet, View } from "react-native";
 import { IconButton } from "react-native-paper";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 export default function TaskExpandIcon() {
-  const { textInitialHeight, expanding, toggleExpanding } = useTaskContext();
+  const { textInitialHeight, expanding, toggleExpanding, textLineHeight } =
+    useTaskContext();
 
-  const hidden = textInitialHeight !== null && textInitialHeight <= 28;
+  const hidden = textInitialHeight <= textLineHeight;
 
   const arrowRotationStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${expanding.value * 180}deg` }],
+    transform: [
+      { rotate: withTiming(`${expanding.value * 180}deg`, { duration: 300 }) },
+    ],
   }));
 
   const lineWidthStyle = useAnimatedStyle(() => ({
-    height: 12 * (1 - expanding.value),
+    height: withTiming(12 * (1 - expanding.value), { duration: 300 }),
   }));
 
   return (

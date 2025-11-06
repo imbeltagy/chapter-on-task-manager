@@ -1,10 +1,10 @@
 import { useTaskContext } from "@/context/task/index";
-import { useEffect } from "react";
 import { GestureDetector } from "react-native-gesture-handler";
 import { Surface, Text } from "react-native-paper";
 import Animated, {
   useAnimatedStyle,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import TaskExpandIcon from "./expand-icon";
 
@@ -16,24 +16,13 @@ export default function TaskCard() {
     completed,
     offsetX,
     setTextInitialHeight,
-    setTextCollapseHeightDiff,
     textInitialHeight,
     isSliding,
     expanding,
-    expanded,
+    textLineHeight,
+    setTextCollapseHeightDiff,
+    titleHeight,
   } = useTaskContext();
-
-  // Collapse Text after getting initial height
-  useEffect(() => {
-    if (textInitialHeight !== null) {
-      expanded.setFalse();
-      expanding.value = 0;
-      setTextCollapseHeightDiff(
-        textInitialHeight < 18 ? 0 : textInitialHeight - 28
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [textInitialHeight]);
 
   const cardStyle = useAnimatedStyle(() => ({
     transform: [
@@ -42,13 +31,16 @@ export default function TaskCard() {
     ],
   }));
 
-  const textStyle = useAnimatedStyle(() =>
-    textInitialHeight !== null
-      ? {
-          height: 28 + Math.max((textInitialHeight - 28) * expanding.value, 0), // 28 => 8 padding top + 20 line height
-        }
-      : {}
-  );
+  const textStyle = useAnimatedStyle(() => ({
+    height: withTiming(
+      expanding.value === 1 || textInitialHeight <= textLineHeight
+        ? textInitialHeight
+        : textLineHeight,
+      {
+        duration: 300,
+      }
+    ), // 28 => 8 padding top + 20 line height
+  }));
 
   return (
     <Animated.View
@@ -82,22 +74,31 @@ export default function TaskCard() {
               textDecorationLine: completed.value ? "line-through" : "none",
               paddingInlineEnd: 30, // for the icon button
             }}
+            onLayout={(e) => {
+              titleHeight.value = e.nativeEvent.layout.height + 8 + 16 * 2;
+            }}
           >
             {title}
           </Text>
-          <Animated.View style={textStyle}>
+          <Animated.View
+            style={[
+              { position: "relative", marginTop: 8, overflow: "hidden" },
+              textStyle,
+            ]}
+          >
             <Text
               onLayout={(e) => {
-                setTextInitialHeight(
-                  textInitialHeight === null
-                    ? e.nativeEvent.layout.height
-                    : textInitialHeight
+                setTextInitialHeight(e.nativeEvent.layout.height);
+                setTextCollapseHeightDiff(
+                  textInitialHeight < textLineHeight
+                    ? 0
+                    : textInitialHeight - textLineHeight
                 );
               }}
               variant="bodyMedium"
               style={{
-                paddingTop: 8,
-                lineHeight: 20,
+                position: "absolute",
+                lineHeight: textLineHeight,
                 color: completed.value ? "gray" : "black",
                 textDecorationLine: completed.value ? "line-through" : "none",
               }}

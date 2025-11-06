@@ -8,6 +8,7 @@ import { TaskContext } from ".";
 
 const screen = Dimensions.get("screen");
 const slideMax = Math.min(screen.width * 0.8, 500);
+const textLineHeight = 20;
 
 export const TaskProvider = ({
   children,
@@ -23,15 +24,16 @@ export const TaskProvider = ({
   const { removeTask, setTaskToEdit } = useTaskStore();
 
   const completed = useBoolean();
-  const expanded = useBoolean(true);
-  const [textInitialHeight, setTextInitialHeight] = useState<number | null>(
-    null
+  const expanded = useBoolean(false);
+  const titleHeight = useSharedValue(0);
+  const [textInitialHeight, setTextInitialHeight] = useState<number>(
+    description?.trim() ? textLineHeight : 0
   );
   const [textCollapseHeightDiff, setTextCollapseHeightDiff] = useState<
     number | null
   >(null);
 
-  const expanding = useSharedValue(1);
+  const expanding = useSharedValue(0);
   const isSliding = useSharedValue(false);
   const offsetX = useSharedValue(0);
   const slidePercent = useSharedValue(0);
@@ -52,9 +54,7 @@ export const TaskProvider = ({
 
       if (slidePercent.value > 0.6) {
         // delete task
-        deleting.value = withTiming(0, {
-          duration: 200,
-        });
+        deleting.value = 0;
         offsetX.value = withTiming(screen.width * 1.2, {
           duration: 200,
         });
@@ -89,9 +89,7 @@ export const TaskProvider = ({
     expanded.setValue((prev) => {
       const newVal = !prev;
 
-      expanding.value = withTiming(newVal ? 1 : 0, {
-        duration: 300,
-      });
+      expanding.value = newVal ? 1 : 0;
 
       return newVal;
     });
@@ -106,6 +104,9 @@ export const TaskProvider = ({
     expanded,
     toggleExpanding,
 
+    titleHeight,
+
+    textLineHeight,
     textInitialHeight,
     setTextInitialHeight,
     textCollapseHeightDiff,
