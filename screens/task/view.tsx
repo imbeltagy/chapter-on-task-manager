@@ -1,34 +1,27 @@
 import { useTaskContext } from "@/context/task";
 import Animated, {
   useAnimatedStyle,
-  withTiming,
+  useSharedValue,
 } from "react-native-reanimated";
 import TaskActionIcon from "./action-icon";
 import TaskCard from "./card";
 
 export default function TaskView() {
-  const {
-    deleting,
-    textInitialHeight,
-    expanding,
-    textLineHeight,
-    titleHeight,
-  } = useTaskContext();
+  const { deleting } = useTaskContext();
+
+  const height = useSharedValue(0);
 
   const containerStyle = useAnimatedStyle(() => ({
-    height: withTiming(
-      deleting.value *
-        (titleHeight.value +
-          1 +
-          (expanding.value === 1 || textInitialHeight <= textLineHeight
-            ? textInitialHeight
-            : textLineHeight)),
-      { duration: 300 }
-    ),
+    height: deleting.value === 1 ? undefined : deleting.value * height.value,
   }));
 
   return (
-    <Animated.View style={[{ overflow: "hidden" }, containerStyle]}>
+    <Animated.View
+      style={[{ overflow: "hidden" }, containerStyle]}
+      onLayout={(e) => {
+        if (deleting.value === 1) height.value = e.nativeEvent.layout.height;
+      }}
+    >
       <TaskActionIcon name="edit" />
       <TaskActionIcon name="delete" />
 

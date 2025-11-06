@@ -28,7 +28,7 @@ export default function TaskModal() {
     resolver: yupResolver(
       yup.object().shape({
         title: yup.string().required("Title is required"),
-        description: yup.string().required("Description is required"),
+        description: yup.string(),
       })
     ),
     defaultValues: {

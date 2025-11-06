@@ -20,7 +20,6 @@ export default function TaskCard() {
     isSliding,
     expanding,
     textLineHeight,
-    setTextCollapseHeightDiff,
     titleHeight,
   } = useTaskContext();
 
@@ -39,7 +38,7 @@ export default function TaskCard() {
       {
         duration: 300,
       }
-    ), // 28 => 8 padding top + 20 line height
+    ),
   }));
 
   return (
@@ -82,17 +81,18 @@ export default function TaskCard() {
           </Text>
           <Animated.View
             style={[
-              { position: "relative", marginTop: 8, overflow: "hidden" },
+              {
+                position: "relative",
+                marginTop: description?.trim() ? 8 : 0,
+                overflow: "hidden",
+              },
               textStyle,
             ]}
           >
             <Text
               onLayout={(e) => {
-                setTextInitialHeight(e.nativeEvent.layout.height);
-                setTextCollapseHeightDiff(
-                  textInitialHeight < textLineHeight
-                    ? 0
-                    : textInitialHeight - textLineHeight
+                setTextInitialHeight(
+                  description?.trim() ? e.nativeEvent.layout.height : 0
                 );
               }}
               variant="bodyMedium"

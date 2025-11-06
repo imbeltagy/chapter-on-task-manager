@@ -17,8 +17,6 @@ interface TaskContextType {
   textLineHeight: number;
   textInitialHeight: number;
   setTextInitialHeight: (height: number) => void;
-  textCollapseHeightDiff: number | null;
-  setTextCollapseHeightDiff: (diff: number | null) => void;
 
   expanding: SharedValue<number>;
   isSliding: SharedValue<boolean>;

@@ -29,9 +29,6 @@ export const TaskProvider = ({
   const [textInitialHeight, setTextInitialHeight] = useState<number>(
     description?.trim() ? textLineHeight : 0
   );
-  const [textCollapseHeightDiff, setTextCollapseHeightDiff] = useState<
-    number | null
-  >(null);
 
   const expanding = useSharedValue(0);
   const isSliding = useSharedValue(false);
@@ -54,7 +51,9 @@ export const TaskProvider = ({
 
       if (slidePercent.value > 0.6) {
         // delete task
-        deleting.value = 0;
+        deleting.value = withTiming(0, {
+          duration: 200,
+        });
         offsetX.value = withTiming(screen.width * 1.2, {
           duration: 200,
         });
@@ -109,8 +108,6 @@ export const TaskProvider = ({
     textLineHeight,
     textInitialHeight,
     setTextInitialHeight,
-    textCollapseHeightDiff,
-    setTextCollapseHeightDiff,
 
     isSliding,
     expanding,
