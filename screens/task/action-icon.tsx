@@ -1,4 +1,4 @@
-import { useTaskContext } from "@/context/task/index";
+import { useTaskContext } from "@/screens/task/context";
 import Animated, {
   Extrapolation,
   interpolate,

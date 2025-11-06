@@ -11,6 +11,8 @@ export type Filter = "all" | "completed" | "incomplete";
 
 export interface TaskManagerStore {
   tasks: Task[];
+  setTasks: (tasks: Task[]) => void;
+
   addTask: (task: Task) => void;
   removeTask: (id: string) => void;
   updateTask: (task: Task) => void;
@@ -109,6 +111,8 @@ const initialTasks: Task[] = [
 
 export const useTaskManagerStore = create<TaskManagerStore>((set) => ({
   tasks: initialTasks,
+  setTasks: (tasks) => set({ tasks }),
+
   addTask: (task) => set((state) => ({ tasks: [task, ...state.tasks] })),
   removeTask: (id) =>
     set((state) => ({ tasks: state.tasks.filter((task) => task.id !== id) })),

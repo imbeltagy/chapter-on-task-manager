@@ -1,4 +1,4 @@
-import { useTaskContext } from "@/context/task/index";
+import { useTaskContext } from "@/screens/task/context";
 import { GestureDetector } from "react-native-gesture-handler";
 import { Surface, Text } from "react-native-paper";
 import Animated, {

@@ -1,9 +1,9 @@
 import Headding from "@/components/headding";
 import Filters from "@/screens/filters";
+import { Task } from "@/screens/task";
 import TaskModal from "@/screens/task-modal";
-import Task from "@/screens/task/index";
 import { useTaskManagerStore } from "@/store/task-manager.store";
-import { ScrollView, View } from "react-native";
+import { ScrollView } from "react-native";
 
 export default function Index() {
   const { tasks, filter } = useTaskManagerStore();
@@ -17,18 +17,16 @@ export default function Index() {
 
       <Filters />
 
-      <ScrollView style={{ flex: 1 }}>
-        <View style={{ paddingHorizontal: 16, paddingBottom: 90 }}>
-          {tasks.map((task) => (
-            <Task
-              key={task.id}
-              task={task}
-              hidden={
-                filter !== "all" && task.completed !== (filter === "completed")
-              }
-            />
-          ))}
-        </View>
+      <ScrollView style={{ flex: 1, paddingHorizontal: 16, paddingBottom: 90 }}>
+        {tasks.map((task) => (
+          <Task
+            key={task.id}
+            task={task}
+            hidden={
+              filter !== "all" && task.completed !== (filter === "completed")
+            }
+          />
+        ))}
       </ScrollView>
 
       <TaskModal />
