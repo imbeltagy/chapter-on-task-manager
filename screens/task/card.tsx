@@ -14,6 +14,7 @@ export default function TaskCard() {
     description,
     slidingGesture,
     completed,
+    setCompleted,
     offsetX,
     setTextInitialHeight,
     textInitialHeight,
@@ -57,11 +58,11 @@ export default function TaskCard() {
           elevation={0}
           style={{
             padding: 16,
-            backgroundColor: completed.value ? "#ddd" : "#fff",
+            backgroundColor: completed ? "#ddd" : "#fff",
           }}
           onTouchEnd={() => {
             if (Math.abs(offsetX.value) < 5) {
-              completed.toggle();
+              setCompleted((prev) => !prev);
             }
           }}
         >
@@ -69,8 +70,8 @@ export default function TaskCard() {
             variant="titleLarge"
             style={{
               height: "auto",
-              color: completed.value ? "gray" : "black",
-              textDecorationLine: completed.value ? "line-through" : "none",
+              color: completed ? "gray" : "black",
+              textDecorationLine: completed ? "line-through" : "none",
               paddingInlineEnd: 30, // for the icon button
             }}
             onLayout={(e) => {
@@ -99,8 +100,8 @@ export default function TaskCard() {
               style={{
                 position: "absolute",
                 lineHeight: textLineHeight,
-                color: completed.value ? "gray" : "black",
-                textDecorationLine: completed.value ? "line-through" : "none",
+                color: completed ? "gray" : "black",
+                textDecorationLine: completed ? "line-through" : "none",
               }}
             >
               {description}

@@ -1,16 +1,10 @@
-import { UseBoolean } from "@/hooks/use-boolean";
+import { Task } from "@/store/task.store";
 import { createContext, useContext } from "react";
 import { PanGesture } from "react-native-gesture-handler";
 import { SharedValue } from "react-native-reanimated";
 
-interface TaskContextType {
-  id: string;
-  title: string;
-  description?: string;
-
-  completed: UseBoolean;
-  expanded: UseBoolean;
-  toggleExpanding: () => void;
+interface TaskContextType extends Task {
+  setCompleted: (completed: boolean | ((prev: boolean) => boolean)) => void;
 
   titleHeight: SharedValue<number>;
 

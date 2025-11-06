@@ -1,4 +1,3 @@
-import useBoolean from "@/hooks/use-boolean";
 import { useTaskStore } from "@/store/task.store";
 import { useState } from "react";
 import { Dimensions } from "react-native";
@@ -15,16 +14,17 @@ export const TaskProvider = ({
   id,
   title,
   description,
+  completed: initialCompleted,
 }: {
   children: React.ReactNode;
   id: string;
   title: string;
   description?: string;
+  completed: boolean;
 }) => {
   const { removeTask, setTaskToEdit } = useTaskStore();
 
-  const completed = useBoolean();
-  const expanded = useBoolean(false);
+  const [completed, setCompleted] = useState(initialCompleted);
   const titleHeight = useSharedValue(0);
   const [textInitialHeight, setTextInitialHeight] = useState<number>(
     description?.trim() ? textLineHeight : 0
@@ -67,7 +67,12 @@ export const TaskProvider = ({
       } else {
         if (slidePercent.value < -0.6) {
           // Edit Task
-          runOnJS(setTaskToEdit)({ id, title, description });
+          runOnJS(setTaskToEdit)({
+            id,
+            title,
+            description,
+            completed,
+          });
         }
 
         // cancel
@@ -84,24 +89,13 @@ export const TaskProvider = ({
     })
     .activeOffsetX([-30, 30]);
 
-  const toggleExpanding = () => {
-    expanded.setValue((prev) => {
-      const newVal = !prev;
-
-      expanding.value = newVal ? 1 : 0;
-
-      return newVal;
-    });
-  };
-
   const value = {
     id,
     title,
     description,
 
     completed,
-    expanded,
-    toggleExpanding,
+    setCompleted,
 
     titleHeight,
 

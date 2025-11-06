@@ -1,15 +1,10 @@
 import { TaskProvider } from "@/context/task/provider";
+import { Task as TTask } from "@/store/task.store";
 import TaskView from "./view";
 
-interface Props {
-  id: string;
-  title: string;
-  description?: string;
-}
-
-export default function Task({ id, title, description }: Props) {
+export default function Task(task: TTask) {
   return (
-    <TaskProvider id={id} title={title} description={description}>
+    <TaskProvider {...task}>
       <TaskView />
     </TaskProvider>
   );

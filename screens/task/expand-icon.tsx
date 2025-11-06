@@ -7,8 +7,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 export default function TaskExpandIcon() {
-  const { textInitialHeight, expanding, toggleExpanding, textLineHeight } =
-    useTaskContext();
+  const { textInitialHeight, expanding, textLineHeight } = useTaskContext();
 
   const hidden = textInitialHeight <= textLineHeight;
 
@@ -42,7 +41,9 @@ export default function TaskExpandIcon() {
         </View>
       )}
       size={25}
-      onPress={toggleExpanding}
+      onPress={() => {
+        expanding.value = expanding.value === 1 ? 0 : 1;
+      }}
       style={[
         {
           margin: 0,

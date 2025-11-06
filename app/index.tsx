@@ -17,12 +17,7 @@ export default function Index() {
       <ScrollView style={{ flex: 1 }}>
         <View style={{ padding: 16, paddingBottom: 90 }}>
           {tasks.map((task) => (
-            <Task
-              key={task.id}
-              id={task.id}
-              title={task.title}
-              description={task.description}
-            />
+            <Task key={task.id} {...task} />
           ))}
         </View>
       </ScrollView>

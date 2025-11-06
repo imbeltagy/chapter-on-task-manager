@@ -21,7 +21,7 @@ const AnimatedFAB = Animated.createAnimatedComponent(FAB);
 
 export default function TaskModal() {
   const { taskToEdit, setTaskToEdit, updateTask, addTask } = useTaskStore();
-  const [visible, setVisible] = useState(false);
+  const [isCreate, setIsCreate] = useState(false);
   const isEdit = taskToEdit !== null;
 
   const { handleSubmit, control, reset } = useForm({
@@ -41,21 +41,21 @@ export default function TaskModal() {
     if (isEdit) {
       updateTask({ ...taskToEdit, ...data });
     } else {
-      addTask({ id: randomUUID(), ...data });
+      addTask({ id: randomUUID(), completed: false, ...data });
     }
     setTaskToEdit(null);
-    setVisible(false);
+    setIsCreate(false);
   });
 
   // reset on close modal
   useEffect(() => {
-    if (!visible) {
+    if (!isCreate) {
       reset({
         title: "",
         description: "",
       });
     }
-  }, [taskToEdit, visible, reset]);
+  }, [taskToEdit, isCreate, reset]);
 
   // reset on edit task
   useEffect(() => {
@@ -71,11 +71,11 @@ export default function TaskModal() {
     <>
       <AnimatedFAB
         icon="plus"
-        onPress={() => setVisible(true)}
+        onPress={() => setIsCreate(true)}
         style={styles.fab}
       />
 
-      <Modal visible={visible || isEdit} onDismiss={() => setVisible(false)}>
+      <Modal visible={isCreate || isEdit} onDismiss={() => setIsCreate(false)}>
         <KeyboardAwareScrollView enableOnAndroid>
           <Surface elevation={0} style={styles.modalCard}>
             <View
@@ -93,7 +93,7 @@ export default function TaskModal() {
               <IconButton
                 icon="close"
                 onPress={() => {
-                  setVisible(false);
+                  setIsCreate(false);
                   setTaskToEdit(null);
                 }}
                 style={{ marginInlineEnd: -10 }}
