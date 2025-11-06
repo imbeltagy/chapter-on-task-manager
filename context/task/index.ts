@@ -1,4 +1,4 @@
-import { Task } from "@/store/task.store";
+import { Task } from "@/store/task-manager.store";
 import { createContext, useContext } from "react";
 import { PanGesture } from "react-native-gesture-handler";
 import { SharedValue } from "react-native-reanimated";

@@ -1,4 +1,4 @@
-import { useTaskStore } from "@/store/task.store";
+import { useTaskManagerStore } from "@/store/task-manager.store";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { randomUUID } from "expo-crypto";
 import { useEffect, useState } from "react";
@@ -20,7 +20,8 @@ import * as yup from "yup";
 const AnimatedFAB = Animated.createAnimatedComponent(FAB);
 
 export default function TaskModal() {
-  const { taskToEdit, setTaskToEdit, updateTask, addTask } = useTaskStore();
+  const { taskToEdit, setTaskToEdit, updateTask, addTask } =
+    useTaskManagerStore();
   const [isCreate, setIsCreate] = useState(false);
   const isEdit = taskToEdit !== null;
 

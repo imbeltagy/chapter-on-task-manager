@@ -1,11 +1,11 @@
 import Headding from "@/components/headding";
 import TaskModal from "@/screens/task-modal";
 import Task from "@/screens/task/index";
-import { useTaskStore } from "@/store/task.store";
+import { useTaskManagerStore } from "@/store/task-manager.store";
 import { ScrollView, View } from "react-native";
 
 export default function Index() {
-  const { tasks } = useTaskStore();
+  const { tasks } = useTaskManagerStore();
 
   return (
     <>

@@ -7,7 +7,7 @@ export interface Task {
   completed: boolean;
 }
 
-export interface TaskStore {
+export interface TaskManagerStore {
   tasks: Task[];
   addTask: (task: Task) => void;
   removeTask: (id: string) => void;
@@ -102,7 +102,7 @@ const initialTasks: Task[] = [
   },
 ];
 
-export const useTaskStore = create<TaskStore>((set) => ({
+export const useTaskManagerStore = create<TaskManagerStore>((set) => ({
   tasks: initialTasks,
   addTask: (task) => set((state) => ({ tasks: [task, ...state.tasks] })),
   removeTask: (id) =>

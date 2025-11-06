@@ -1,4 +1,4 @@
-import { useTaskStore } from "@/store/task.store";
+import { useTaskManagerStore } from "@/store/task-manager.store";
 import { useState } from "react";
 import { Dimensions } from "react-native";
 import { Gesture } from "react-native-gesture-handler";
@@ -22,7 +22,7 @@ export const TaskProvider = ({
   description?: string;
   completed: boolean;
 }) => {
-  const { removeTask, setTaskToEdit } = useTaskStore();
+  const { removeTask, setTaskToEdit } = useTaskManagerStore();
 
   const [completed, setCompleted] = useState(initialCompleted);
   const titleHeight = useSharedValue(0);
