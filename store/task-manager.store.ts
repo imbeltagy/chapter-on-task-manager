@@ -7,6 +7,8 @@ export interface Task {
   completed: boolean;
 }
 
+export type Filter = "all" | "completed" | "incomplete";
+
 export interface TaskManagerStore {
   tasks: Task[];
   addTask: (task: Task) => void;
@@ -15,6 +17,9 @@ export interface TaskManagerStore {
 
   taskToEdit: Task | null;
   setTaskToEdit: (task: Task | null) => void;
+
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
 }
 
 const initialTasks: Task[] = [
@@ -114,4 +119,7 @@ export const useTaskManagerStore = create<TaskManagerStore>((set) => ({
 
   taskToEdit: null,
   setTaskToEdit: (task) => set({ taskToEdit: task }),
+
+  filter: "all",
+  setFilter: (filter) => set({ filter }),
 }));

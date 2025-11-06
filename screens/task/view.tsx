@@ -6,7 +6,7 @@ import Animated, {
 import TaskActionIcon from "./action-icon";
 import TaskCard from "./card";
 
-export default function TaskView() {
+export default function TaskView({ hidden }: { hidden: boolean }) {
   const { deleting } = useTaskContext();
 
   const height = useSharedValue(0);
@@ -17,7 +17,10 @@ export default function TaskView() {
 
   return (
     <Animated.View
-      style={[{ overflow: "hidden" }, containerStyle]}
+      style={[
+        { overflow: "hidden", display: hidden ? "none" : "flex" },
+        containerStyle,
+      ]}
       onLayout={(e) => {
         if (deleting.value === 1) height.value = e.nativeEvent.layout.height;
       }}
