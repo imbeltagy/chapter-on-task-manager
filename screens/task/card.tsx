@@ -14,7 +14,7 @@ export default function TaskCard() {
     description,
     slidingGesture,
     completed,
-    setCompleted,
+    toggleComplete,
     offsetX,
     setTextInitialHeight,
     textInitialHeight,
@@ -62,7 +62,7 @@ export default function TaskCard() {
           }}
           onTouchEnd={() => {
             if (Math.abs(offsetX.value) < 5) {
-              setCompleted((prev) => !prev);
+              toggleComplete();
             }
           }}
         >

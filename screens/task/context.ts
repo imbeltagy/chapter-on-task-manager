@@ -4,7 +4,7 @@ import { PanGesture } from "react-native-gesture-handler";
 import { SharedValue } from "react-native-reanimated";
 
 interface TaskContextType extends Task {
-  setCompleted: (completed: boolean | ((prev: boolean) => boolean)) => void;
+  toggleComplete: () => void;
 
   titleHeight: SharedValue<number>;
 

@@ -12,7 +12,7 @@ const slideMax = Math.min(screen.width * 0.8, 500);
 const textLineHeight = 20;
 
 export const Task = ({
-  task: { id, title, description, completed: initialCompleted },
+  task: { id, title, description, completed },
   hidden,
   index,
 }: {
@@ -20,10 +20,9 @@ export const Task = ({
   hidden: boolean;
   index: number;
 }) => {
-  const { removeTask, setTaskToEdit } = useTaskManagerStore();
+  const { removeTask, setTaskToEdit, updateTask } = useTaskManagerStore();
   const { dragIndex } = useDragListContext();
 
-  const [completed, setCompleted] = useState(initialCompleted);
   const titleHeight = useSharedValue(0);
   const [textInitialHeight, setTextInitialHeight] = useState<number>(
     description?.trim() ? textLineHeight : 0
@@ -72,7 +71,6 @@ export const Task = ({
             id,
             title,
             description,
-            completed,
           });
         }
 
@@ -96,7 +94,7 @@ export const Task = ({
     description,
 
     completed,
-    setCompleted,
+    toggleComplete: () => updateTask({ id, completed: !completed }),
 
     titleHeight,
 

@@ -18,10 +18,10 @@ export interface TaskManagerStore {
 
   addTask: (task: Task) => void;
   removeTask: (id: string) => void;
-  updateTask: (task: Task) => void;
+  updateTask: (task: Partial<Task>) => void;
 
-  taskToEdit: Task | null;
-  setTaskToEdit: (task: Task | null) => void;
+  taskToEdit: Partial<Task> | null;
+  setTaskToEdit: (task: Partial<Task> | null) => void;
 
   filter: Filter;
   setFilter: (filter: Filter) => void;
@@ -48,7 +48,7 @@ export const useTaskManagerStore = create<TaskManagerStore>((set, get) => ({
     set((state) => ({ tasks: state.tasks.filter((task) => task.id !== id) })),
   updateTask: (task) =>
     set((state) => ({
-      tasks: state.tasks.map((t) => (t.id === task.id ? task : t)),
+      tasks: state.tasks.map((t) => (t.id === task.id ? { ...t, ...task } : t)),
     })),
 
   taskToEdit: null,
