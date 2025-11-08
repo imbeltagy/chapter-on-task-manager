@@ -4,7 +4,7 @@ import { SharedValue } from "react-native-reanimated";
 interface DragListContextType {
   dragIndex: SharedValue<number>;
   draggedOverCount: SharedValue<number>;
-  ignoredCount: SharedValue<number>;
+  ignoredIds: SharedValue<string[]>;
   offsetY: SharedValue<number>;
 }
 

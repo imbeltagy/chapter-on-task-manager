@@ -3,10 +3,10 @@ import { useTaskManagerStore } from "@/store/task-manager.store";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { runOnJS, withTiming } from "react-native-reanimated";
+import { runOnJS } from "react-native-reanimated";
 
 export default function DragButton({ index }: { index: number }) {
-  const { dragIndex, draggedOverCount, offsetY, ignoredCount } =
+  const { dragIndex, draggedOverCount, offsetY, ignoredIds } =
     useDragListContext();
   const { heights, tasks, moveDownAfter, moveUpBefore, filter } =
     useTaskManagerStore();
@@ -22,7 +22,7 @@ export default function DragButton({ index }: { index: number }) {
     }
 
     let count = 0;
-    let ignored = 0;
+    let ignored: string[] = [];
     let cumulativeHeight = 0;
     const absY = Math.abs(y);
 
@@ -32,7 +32,7 @@ export default function DragButton({ index }: { index: number }) {
         const ignore =
           filter !== "all" && tasks[i].completed !== (filter === "completed");
         const height = ignore ? 0 : taskHeights[i] || 0;
-        if (ignore) ignored++;
+        if (ignore) ignored.push(tasks[i].id);
         cumulativeHeight += height;
         if (cumulativeHeight - height / 2 <= absY) {
           count++;
@@ -46,7 +46,7 @@ export default function DragButton({ index }: { index: number }) {
         const ignore =
           filter !== "all" && tasks[i].completed !== (filter === "completed");
         const height = ignore ? 0 : taskHeights[i] || 0;
-        if (ignore) ignored++;
+        if (ignore) ignored.push(tasks[i].id);
         cumulativeHeight += height;
         if (cumulativeHeight - height / 2 <= absY) {
           count++;
@@ -57,7 +57,7 @@ export default function DragButton({ index }: { index: number }) {
     }
 
     draggedOverCount.value = count;
-    ignoredCount.value = ignored;
+    ignoredIds.value = ignored;
   };
 
   const dragGesture = Gesture.Pan()
@@ -73,32 +73,35 @@ export default function DragButton({ index }: { index: number }) {
     })
     .onEnd(() => {
       if (offsetY.value > 0) {
-        offsetY.value = withTiming(
-          (draggedOverCount.value - ignoredCount.value) *
-            heights[dragIndex.value],
-          { duration: 150 }
-        );
+        offsetY.value =
+          (draggedOverCount.value - ignoredIds.value.length) *
+          heights[dragIndex.value];
 
-        runOnJS(moveDownAfter)(
-          tasks[dragIndex.value].id,
-          tasks[dragIndex.value + draggedOverCount.value].id
-        );
+        setTimeout(() => {
+          runOnJS(moveDownAfter)(
+            tasks[dragIndex.value].id,
+            tasks[dragIndex.value + draggedOverCount.value].id
+          );
+        }, 150);
       } else {
         let accumulatedHeight = 0;
         for (
           let i = dragIndex.value;
-          i > dragIndex.value - (draggedOverCount.value - ignoredCount.value);
+          i > dragIndex.value - draggedOverCount.value;
           i--
         ) {
+          if (ignoredIds.value.includes(tasks[i - 1].id)) continue;
           accumulatedHeight += heights[i - 1] || 0;
         }
 
-        offsetY.value = withTiming(-accumulatedHeight, { duration: 150 });
+        offsetY.value = -accumulatedHeight;
 
-        runOnJS(moveUpBefore)(
-          tasks[dragIndex.value].id,
-          tasks[dragIndex.value - draggedOverCount.value].id
-        );
+        setTimeout(() => {
+          runOnJS(moveUpBefore)(
+            tasks[dragIndex.value].id,
+            tasks[dragIndex.value - draggedOverCount.value].id
+          );
+        }, 150);
       }
     });
   // .activeOffsetY([-30, 30]);

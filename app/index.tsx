@@ -14,13 +14,13 @@ export default function Index() {
   const offsetY = useSharedValue(0);
   const draggedOverCount = useSharedValue(0);
   const dragIndex = useSharedValue(-1);
-  const ignoredCount = useSharedValue(0);
+  const ignoredIds = useSharedValue<string[]>([]);
 
   useEffect(() => {
     offsetY.value = 0;
     draggedOverCount.value = 0;
     dragIndex.value = -1;
-    ignoredCount.value = 0;
+    ignoredIds.value = [];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasks]);
 
@@ -38,7 +38,7 @@ export default function Index() {
           offsetY={offsetY}
           draggedOverCount={draggedOverCount}
           dragIndex={dragIndex}
-          ignoredCount={ignoredCount}
+          ignoredIds={ignoredIds}
         >
           {tasks.map((task, index) => (
             <Task
