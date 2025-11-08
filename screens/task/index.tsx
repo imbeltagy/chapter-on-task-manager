@@ -1,4 +1,3 @@
-import { useDragListContext } from "@/context/drag-list";
 import TaskView from "@/screens/task/view";
 import { Task as TTask, useTaskManagerStore } from "@/store/task-manager.store";
 import { useState } from "react";
@@ -14,16 +13,12 @@ const textLineHeight = 20;
 export const Task = ({
   task: { id, title, description, completed },
   hidden,
-  index,
 }: {
   task: TTask;
   hidden: boolean;
-  index: number;
 }) => {
   const { removeTask, setTaskToEdit, updateTask } = useTaskManagerStore();
-  const { dragIndex } = useDragListContext();
 
-  const titleHeight = useSharedValue(0);
   const [textInitialHeight, setTextInitialHeight] = useState<number>(
     description?.trim() ? textLineHeight : 0
   );
@@ -37,17 +32,15 @@ export const Task = ({
 
   const slidingGesture = Gesture.Pan()
     .onBegin(() => {
-      if (dragIndex.value !== -1) return;
       isSliding.value = true;
     })
     .onUpdate((event) => {
-      if (dragIndex.value !== -1) return;
       // console.log("update", event.translationX);
       offsetX.value = event.translationX;
       slidePercent.value = event.translationX / slideMax;
     })
     .onEnd(() => {
-      if (deleting.value < 1 || dragIndex.value !== -1) return;
+      if (!deleting.value) return;
 
       if (slidePercent.value > 0.6) {
         // delete task
@@ -55,15 +48,15 @@ export const Task = ({
           duration: 200,
         });
         offsetX.value = withTiming(screen.width * 1.2, {
-          duration: 200,
+          duration: 100,
         });
         slidePercent.value = withTiming(screen.width * 1.2, {
-          duration: 200,
+          duration: 100,
         });
 
         setTimeout(() => {
           runOnJS(removeTask)(id);
-        }, 200);
+        }, 100);
       } else {
         if (slidePercent.value < -0.6) {
           // Edit Task
@@ -96,8 +89,6 @@ export const Task = ({
     completed,
     toggleComplete: () => updateTask({ id, completed: !completed }),
 
-    titleHeight,
-
     textLineHeight,
     textInitialHeight,
     setTextInitialHeight,
@@ -109,8 +100,6 @@ export const Task = ({
     slidingGesture,
 
     deleting,
-
-    currentIndex: index,
   };
 
   return (

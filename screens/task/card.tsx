@@ -21,7 +21,6 @@ export default function TaskCard() {
     isSliding,
     expanding,
     textLineHeight,
-    titleHeight,
   } = useTaskContext();
 
   const cardStyle = useAnimatedStyle(() => ({
@@ -73,9 +72,6 @@ export default function TaskCard() {
               color: completed ? "gray" : "black",
               textDecorationLine: completed ? "line-through" : "none",
               paddingInlineEnd: 30, // for the icon button
-            }}
-            onLayout={(e) => {
-              titleHeight.value = e.nativeEvent.layout.height + 8 + 16 * 2;
             }}
           >
             {title}

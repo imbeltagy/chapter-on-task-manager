@@ -6,8 +6,6 @@ import { SharedValue } from "react-native-reanimated";
 interface TaskContextType extends Task {
   toggleComplete: () => void;
 
-  titleHeight: SharedValue<number>;
-
   textLineHeight: number;
   textInitialHeight: number;
   setTextInitialHeight: (height: number) => void;
@@ -19,9 +17,6 @@ interface TaskContextType extends Task {
   slidingGesture: PanGesture;
 
   deleting: SharedValue<number>;
-
-  currentIndex: number;
-  // dragGesture: PanGesture;
 }
 
 export const TaskContext = createContext<TaskContextType>(

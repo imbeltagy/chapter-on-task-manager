@@ -1,32 +1,36 @@
 import Headding from "@/components/headding";
-import DragListProvider from "@/context/drag-list/provider";
 import Filters from "@/screens/filters";
+import NoTasks from "@/screens/no-tasks";
 import { Task } from "@/screens/task";
 import TaskModal from "@/screens/task-modal";
-import { useTaskManagerStore } from "@/store/task-manager.store";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useEffect } from "react";
-import { ScrollView, View } from "react-native";
-import { Text } from "react-native-paper";
-import { useSharedValue } from "react-native-reanimated";
+import { Task as TTask, useTaskManagerStore } from "@/store/task-manager.store";
+import { useCallback, useEffect } from "react";
+import { ScrollView } from "react-native-gesture-handler";
+import { useAnimatedRef } from "react-native-reanimated";
+import Sortable, { SortableGridRenderItem } from "react-native-sortables";
 
 export default function Index() {
-  const { tasks, filter } = useTaskManagerStore();
+  const { tasks, filter, setTasks, setOnAddTask } = useTaskManagerStore();
+  const hasTasks = tasks.length > 0;
 
-  const offsetY = useSharedValue(0);
-  const draggedOverCount = useSharedValue(0);
-  const dragIndex = useSharedValue(-1);
-  const ignoredIds = useSharedValue<string[]>([]); // the hidden tasks that are passed by the dragged task
+  const scrollableRef = useAnimatedRef<ScrollView>();
 
   useEffect(() => {
-    offsetY.value = 0;
-    draggedOverCount.value = 0;
-    dragIndex.value = -1;
-    ignoredIds.value = [];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasks]);
+    setOnAddTask(() => {
+      scrollableRef.current?.scrollTo({ y: 0, animated: true });
+    });
+  }, [scrollableRef, setOnAddTask]);
 
-  const hasTasks = tasks.length > 0;
+  const renderItem = useCallback<SortableGridRenderItem<TTask>>(
+    ({ item }) => (
+      <Task
+        key={item.id}
+        task={item}
+        hidden={filter !== "all" && item.completed !== (filter === "completed")}
+      />
+    ),
+    [filter]
+  );
 
   return (
     <>
@@ -40,56 +44,27 @@ export default function Index() {
           <Filters />
 
           <ScrollView
-            style={{ flex: 1, paddingHorizontal: 16, paddingBottom: 90 }}
+            style={{
+              flex: 1,
+              paddingHorizontal: 16,
+              paddingBottom: 90,
+            }}
+            ref={scrollableRef}
           >
-            <DragListProvider
-              offsetY={offsetY}
-              draggedOverCount={draggedOverCount}
-              dragIndex={dragIndex}
-              ignoredIds={ignoredIds}
-            >
-              {tasks.map((task, index) => (
-                <Task
-                  key={task.id}
-                  task={task}
-                  hidden={
-                    filter !== "all" &&
-                    task.completed !== (filter === "completed")
-                  }
-                  index={index}
-                />
-              ))}
-            </DragListProvider>
+            <Sortable.Grid
+              columns={1}
+              data={tasks}
+              renderItem={renderItem}
+              onDragEnd={(params) => {
+                setTimeout(() => {
+                  setTasks(params.data);
+                }, 300);
+              }}
+            />
           </ScrollView>
         </>
       ) : (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            paddingHorizontal: 32,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: 4,
-            }}
-          >
-            <Text
-              variant="bodyLarge"
-              style={{ textAlign: "center", color: "gray" }}
-            >
-              It seems that you don&apos;t have tasks yet. Press{" "}
-              <Ionicons name="add-circle" size={20} /> button to create your
-              first task
-            </Text>
-          </View>
-        </View>
+        <NoTasks />
       )}
 
       <TaskModal />
