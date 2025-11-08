@@ -4,8 +4,10 @@ import Filters from "@/screens/filters";
 import { Task } from "@/screens/task";
 import TaskModal from "@/screens/task-modal";
 import { useTaskManagerStore } from "@/store/task-manager.store";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useEffect } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
+import { Text } from "react-native-paper";
 import { useSharedValue } from "react-native-reanimated";
 
 export default function Index() {
@@ -24,6 +26,8 @@ export default function Index() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasks]);
 
+  const hasTasks = tasks.length > 0;
+
   return (
     <>
       <Headding
@@ -31,27 +35,62 @@ export default function Index() {
         subtitle="Create, Edit, Order, and Delete your Tasks freely"
       />
 
-      <Filters />
+      {hasTasks ? (
+        <>
+          <Filters />
 
-      <ScrollView style={{ flex: 1, paddingHorizontal: 16, paddingBottom: 90 }}>
-        <DragListProvider
-          offsetY={offsetY}
-          draggedOverCount={draggedOverCount}
-          dragIndex={dragIndex}
-          ignoredIds={ignoredIds}
+          <ScrollView
+            style={{ flex: 1, paddingHorizontal: 16, paddingBottom: 90 }}
+          >
+            <DragListProvider
+              offsetY={offsetY}
+              draggedOverCount={draggedOverCount}
+              dragIndex={dragIndex}
+              ignoredIds={ignoredIds}
+            >
+              {tasks.map((task, index) => (
+                <Task
+                  key={task.id}
+                  task={task}
+                  hidden={
+                    filter !== "all" &&
+                    task.completed !== (filter === "completed")
+                  }
+                  index={index}
+                />
+              ))}
+            </DragListProvider>
+          </ScrollView>
+        </>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 32,
+          }}
         >
-          {tasks.map((task, index) => (
-            <Task
-              key={task.id}
-              task={task}
-              hidden={
-                filter !== "all" && task.completed !== (filter === "completed")
-              }
-              index={index}
-            />
-          ))}
-        </DragListProvider>
-      </ScrollView>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: 4,
+            }}
+          >
+            <Text
+              variant="bodyLarge"
+              style={{ textAlign: "center", color: "gray" }}
+            >
+              It seems that you don&apos;t have tasks yet. Press{" "}
+              <Ionicons name="add-circle" size={20} /> button to create your
+              first task
+            </Text>
+          </View>
+        </View>
+      )}
 
       <TaskModal />
     </>
