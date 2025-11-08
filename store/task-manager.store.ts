@@ -13,13 +13,16 @@ export interface TaskManagerStore {
   tasks: Task[];
   setTasks: (tasks: Task[]) => void;
 
+  // add/remove/update tasks
   addTask: (task: Task) => void;
   removeTask: (id: string) => void;
   updateTask: (task: Partial<Task>) => void;
 
+  // function to call when a task is added
   onAddTask: () => void;
   setOnAddTask: (onAddTask: () => void) => void;
 
+  // set task for editing - opens form modal
   taskToEdit: Partial<Task> | null;
   setTaskToEdit: (task: Partial<Task> | null) => void;
 
