@@ -25,6 +25,9 @@ export interface TaskManagerStore {
 
   filter: Filter;
   setFilter: (filter: Filter) => void;
+
+  moveDownAfter: (from: string, to: string) => void;
+  moveUpBefore: (from: string, to: string) => void;
 }
 
 export const initialTasks: Task[] = [
@@ -138,4 +141,49 @@ export const useTaskManagerStore = create<TaskManagerStore>((set, get) => ({
 
   filter: "all",
   setFilter: (filter) => set({ filter }),
+
+  moveDownAfter: (from, to) =>
+    set((state) => {
+      const newTasks = [...state.tasks];
+      let swap = false;
+
+      for (let i = 0; i < newTasks.length; i++) {
+        if (swap) {
+          const curId = newTasks[i].id;
+          [newTasks[i], newTasks[i - 1]] = [newTasks[i - 1], newTasks[i]];
+
+          if (curId === to) {
+            break;
+          }
+        }
+
+        if (newTasks[i].id === from) {
+          swap = true;
+        }
+      }
+
+      return { tasks: newTasks };
+    }),
+  moveUpBefore: (from, to) =>
+    set((state) => {
+      const newTasks = [...state.tasks];
+      let swap = false;
+
+      for (let i = newTasks.length - 1; i >= 0; i--) {
+        if (swap) {
+          const curId = newTasks[i].id;
+          [newTasks[i], newTasks[i + 1]] = [newTasks[i + 1], newTasks[i]];
+
+          if (curId === to) {
+            break;
+          }
+        }
+
+        if (newTasks[i].id === from) {
+          swap = true;
+        }
+      }
+
+      return { tasks: newTasks };
+    }),
 }));

@@ -6,14 +6,18 @@ export default function DragListProvider({
   offsetY,
   draggedOverCount,
   dragIndex,
+  ignoredCount,
 }: {
   children: React.ReactNode;
   offsetY: SharedValue<number>;
   draggedOverCount: SharedValue<number>;
   dragIndex: SharedValue<number>;
+  ignoredCount: SharedValue<number>;
 }) {
   return (
-    <DragListContext.Provider value={{ dragIndex, draggedOverCount, offsetY }}>
+    <DragListContext.Provider
+      value={{ dragIndex, draggedOverCount, offsetY, ignoredCount }}
+    >
       {children}
     </DragListContext.Provider>
   );

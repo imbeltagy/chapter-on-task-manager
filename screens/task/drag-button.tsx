@@ -6,8 +6,10 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { runOnJS, withTiming } from "react-native-reanimated";
 
 export default function DragButton({ index }: { index: number }) {
-  const { dragIndex, draggedOverCount, offsetY } = useDragListContext();
-  const { heights, tasks, setTasks } = useTaskManagerStore();
+  const { dragIndex, draggedOverCount, offsetY, ignoredCount } =
+    useDragListContext();
+  const { heights, tasks, moveDownAfter, moveUpBefore, filter } =
+    useTaskManagerStore();
 
   const calculateTasksDraggedOver = (
     y: number,
@@ -20,13 +22,17 @@ export default function DragButton({ index }: { index: number }) {
     }
 
     let count = 0;
+    let ignored = 0;
     let cumulativeHeight = 0;
     const absY = Math.abs(y);
 
     if (y > 0) {
       // Dragging down - count tasks below
       for (let i = currentIndex + 1; i < taskHeights.length; i++) {
-        const height = taskHeights[i] || 0;
+        const ignore =
+          filter !== "all" && tasks[i].completed !== (filter === "completed");
+        const height = ignore ? 0 : taskHeights[i] || 0;
+        if (ignore) ignored++;
         cumulativeHeight += height;
         if (cumulativeHeight - height / 2 <= absY) {
           count++;
@@ -37,7 +43,10 @@ export default function DragButton({ index }: { index: number }) {
     } else {
       // Dragging up - count tasks above
       for (let i = currentIndex - 1; i >= 0; i--) {
-        const height = taskHeights[i] || 0;
+        const ignore =
+          filter !== "all" && tasks[i].completed !== (filter === "completed");
+        const height = ignore ? 0 : taskHeights[i] || 0;
+        if (ignore) ignored++;
         cumulativeHeight += height;
         if (cumulativeHeight - height / 2 <= absY) {
           count++;
@@ -48,6 +57,7 @@ export default function DragButton({ index }: { index: number }) {
     }
 
     draggedOverCount.value = count;
+    ignoredCount.value = ignored;
   };
 
   const dragGesture = Gesture.Pan()
@@ -62,36 +72,34 @@ export default function DragButton({ index }: { index: number }) {
       runOnJS(calculateTasksDraggedOver)(y, index, heights);
     })
     .onEnd(() => {
-      const newTasks = [...tasks];
-
       if (offsetY.value > 0) {
-        for (
-          let i = dragIndex.value;
-          i < dragIndex.value + draggedOverCount.value;
-          i++
-        ) {
-          [newTasks[i], newTasks[i + 1]] = [newTasks[i + 1], newTasks[i]];
-        }
-
         offsetY.value = withTiming(
-          draggedOverCount.value * heights[dragIndex.value],
+          (draggedOverCount.value - ignoredCount.value) *
+            heights[dragIndex.value],
           { duration: 150 }
+        );
+
+        runOnJS(moveDownAfter)(
+          tasks[dragIndex.value].id,
+          tasks[dragIndex.value + draggedOverCount.value].id
         );
       } else {
         let accumulatedHeight = 0;
         for (
           let i = dragIndex.value;
-          i > dragIndex.value - draggedOverCount.value;
+          i > dragIndex.value - (draggedOverCount.value - ignoredCount.value);
           i--
         ) {
-          [newTasks[i], newTasks[i - 1]] = [newTasks[i - 1], newTasks[i]];
           accumulatedHeight += heights[i - 1] || 0;
         }
 
         offsetY.value = withTiming(-accumulatedHeight, { duration: 150 });
-      }
 
-      runOnJS(setTasks)(newTasks);
+        runOnJS(moveUpBefore)(
+          tasks[dragIndex.value].id,
+          tasks[dragIndex.value - draggedOverCount.value].id
+        );
+      }
     });
   // .activeOffsetY([-30, 30]);
 
