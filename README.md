@@ -1,50 +1,104 @@
-# Welcome to your Expo app 👋
+# Task Management App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A feature-rich task management application built with React Native and Expo, providing an intuitive interface for organizing and tracking your daily tasks.
 
-## Get started
+## Setup and Installation
 
-1. Install dependencies
+### Prerequisites
 
-   ```bash
-   npm install
-   ```
+##### skip this section and the following one if you will download the prebuild APK version
 
-2. Start the app
+- Node.js (v14 or higher)
+- npm or pnpm package manager
+- Expo Go app on your mobile device (for testing on physical device)
+- Android Studio (optional, for Android emulator)
 
-   ```bash
-   npx expo start
-   ```
+### Installation Steps
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+#### Using npm:
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+#### Using pnpm:
 
-## Learn more
+```bash
+pnpm install
+pnpm expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### Running the App
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+After starting the development server, you have several options:
 
-## Join the community
+1. **Pre-built APK**:
 
-Join our community of developers creating universal apps.
+   - Download the APK directly from: [here](https://expo.dev/accounts/imbeltagy/projects/chapterone/builds/389458fe-d664-4ee8-831e-73e097805406)
+   - Install on any Android device
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+2. **Physical Device**:
+
+   - Install the Expo Go app from your device's app store
+   - Scan the QR code displayed in the terminal
+   - The app will open automatically in Expo Go
+
+3. **Android Emulator**:
+   - Ensure Android Studio is installed and configured
+   - Press `a` in the terminal to launch on Android emulator
+
+## Features
+
+### Task Operations
+
+- **Create Tasks**: Tap the `+` button in the bottom right corner to add a new task
+- **Edit Tasks**: Swipe a task to the left to edit its details
+- **Delete Tasks**: Swipe a task to the right to remove it
+- **Toggle Completion**: Tap on a task to mark it as complete or incomplete
+- **Expand Details**: Press the `+` button on a task to expand and view its full content
+- **Reorder Tasks**: Press and hold a task to drag and reorder it in your list
+
+### Filtering
+
+- Use the filter options at the top to view:
+  - **All**: Display all tasks
+  - **Completed**: Show only completed tasks
+  - **Incomplete**: Show only pending tasks
+
+## Technology Stack
+
+### Core Framework
+
+- **React Native** with **Expo** for cross-platform mobile development
+
+### Third-Party Libraries
+
+| Library                          | Purpose                                                                         |
+| -------------------------------- | ------------------------------------------------------------------------------- |
+| `react-native-paper`             | Material Design UI component library for consistent and polished interface      |
+| `react-native-safe-area-context` | Ensures content avoids status bar and navigation bar areas on different devices |
+| `react-native-gesture-handler`   | Handles complex gesture interactions for swiping and dragging                   |
+| `react-native-reanimated`        | Provides smooth, performant animations for gesture-based interactions           |
+| `react-native-sortable-list`     | Enables drag-and-drop functionality for task reordering                         |
+| `zustand`                        | Lightweight state management solution for global app state                      |
+
+## State Management Architecture
+
+The app uses a hybrid approach to state management:
+
+### React Context
+
+- **Purpose**: Manages shared state between a component and its children
+- **Use Case**: `taskContext` handles task-specific state to force re-renders on status changes and simplify hook definitions
+- **Scope**: Local to task components and their descendants
+
+### Zustand
+
+- **Purpose**: Manages shared state across multiple components
+- **Use Case**: `taskManagementStore` handles all tasks and filter states globally
+- **Scope**: Application-wide state accessible from any component
+
+---
+
+Built with ❤️ using React Native and Expo
