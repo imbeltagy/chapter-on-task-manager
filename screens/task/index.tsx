@@ -1,3 +1,4 @@
+import { useDragListContext } from "@/context/drag-list";
 import TaskView from "@/screens/task/view";
 import { Task as TTask, useTaskManagerStore } from "@/store/task-manager.store";
 import { useState } from "react";
@@ -13,11 +14,14 @@ const textLineHeight = 20;
 export const Task = ({
   task: { id, title, description, completed: initialCompleted },
   hidden,
+  index,
 }: {
   task: TTask;
   hidden: boolean;
+  index: number;
 }) => {
   const { removeTask, setTaskToEdit } = useTaskManagerStore();
+  const { dragIndex } = useDragListContext();
 
   const [completed, setCompleted] = useState(initialCompleted);
   const titleHeight = useSharedValue(0);
@@ -34,15 +38,17 @@ export const Task = ({
 
   const slidingGesture = Gesture.Pan()
     .onBegin(() => {
+      if (dragIndex.value !== -1) return;
       isSliding.value = true;
     })
     .onUpdate((event) => {
+      if (dragIndex.value !== -1) return;
       // console.log("update", event.translationX);
       offsetX.value = event.translationX;
       slidePercent.value = event.translationX / slideMax;
     })
     .onEnd(() => {
-      if (deleting.value < 1) return;
+      if (deleting.value < 1 || dragIndex.value !== -1) return;
 
       if (slidePercent.value > 0.6) {
         // delete task
@@ -105,11 +111,13 @@ export const Task = ({
     slidingGesture,
 
     deleting,
+
+    currentIndex: index,
   };
 
   return (
     <TaskContext.Provider value={value}>
-      <TaskView hidden={hidden} />
+      <TaskView hidden={hidden} index={index} />
     </TaskContext.Provider>
   );
 };

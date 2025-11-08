@@ -13,6 +13,9 @@ export interface TaskManagerStore {
   tasks: Task[];
   setTasks: (tasks: Task[]) => void;
 
+  heights: number[];
+  setTaskHeight: (index: number, height: number) => void;
+
   addTask: (task: Task) => void;
   removeTask: (id: string) => void;
   updateTask: (task: Task) => void;
@@ -24,7 +27,7 @@ export interface TaskManagerStore {
   setFilter: (filter: Filter) => void;
 }
 
-const initialTasks: Task[] = [
+export const initialTasks: Task[] = [
   { id: "1", title: "Task 1", description: "Description 1", completed: false },
   {
     id: "2",
@@ -109,9 +112,18 @@ const initialTasks: Task[] = [
   },
 ];
 
-export const useTaskManagerStore = create<TaskManagerStore>((set) => ({
+export const useTaskManagerStore = create<TaskManagerStore>((set, get) => ({
   tasks: initialTasks,
   setTasks: (tasks) => set({ tasks }),
+
+  heights: [],
+  setTaskHeight: (index, height) => {
+    set(({ heights }) => {
+      const old = [...heights];
+      old[index] = height;
+      return { heights: old };
+    });
+  },
 
   addTask: (task) => set((state) => ({ tasks: [task, ...state.tasks] })),
   removeTask: (id) =>

@@ -19,6 +19,9 @@ interface TaskContextType extends Task {
   slidingGesture: PanGesture;
 
   deleting: SharedValue<number>;
+
+  currentIndex: number;
+  // dragGesture: PanGesture;
 }
 
 export const TaskContext = createContext<TaskContextType>(
