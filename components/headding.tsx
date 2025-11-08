@@ -8,6 +8,7 @@ interface Props {
 
 export default function Headding({ title, subtitle }: Props) {
   const insets = useSafeAreaInsets();
+
   return (
     <Surface
       style={{
