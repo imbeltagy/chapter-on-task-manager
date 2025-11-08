@@ -117,7 +117,7 @@ export const Task = ({
 
   return (
     <TaskContext.Provider value={value}>
-      <TaskView hidden={hidden} index={index} />
+      <TaskView hidden={hidden} />
     </TaskContext.Provider>
   );
 };

@@ -12,13 +12,7 @@ import { useTaskManagerStore } from "@/store/task-manager.store";
 import { View } from "react-native";
 import DragButton from "./drag-button";
 
-export default function TaskView({
-  hidden,
-  index,
-}: {
-  hidden: boolean;
-  index: number;
-}) {
+export default function TaskView({ hidden }: { hidden: boolean }) {
   const { deleting, currentIndex } = useTaskContext();
   const { dragIndex, draggedOverCount, offsetY } = useDragListContext();
   const { setTaskHeight, heights } = useTaskManagerStore();
@@ -64,10 +58,10 @@ export default function TaskView({
       ]}
       onLayout={(e) => {
         if (deleting.value === 1) height.value = e.nativeEvent.layout.height;
-        setTaskHeight(index, e.nativeEvent.layout.height);
+        setTaskHeight(currentIndex, e.nativeEvent.layout.height);
       }}
     >
-      <DragButton index={index} />
+      <DragButton index={currentIndex} />
 
       <View style={{ flex: 1 }}>
         <TaskActionIcon name="edit" />

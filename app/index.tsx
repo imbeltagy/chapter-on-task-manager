@@ -14,7 +14,7 @@ export default function Index() {
   const offsetY = useSharedValue(0);
   const draggedOverCount = useSharedValue(0);
   const dragIndex = useSharedValue(-1);
-  const ignoredIds = useSharedValue<string[]>([]);
+  const ignoredIds = useSharedValue<string[]>([]); // the hidden tasks that are passed by the dragged task
 
   useEffect(() => {
     offsetY.value = 0;
